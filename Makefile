@@ -1,12 +1,21 @@
 # Makefile für Jupyter Notebook
 
-.PHONY: run stop install
 
-install:
-	pip install notebook
+install:	
+	pip3 install --upgrade pip &&\
+		pip3 install -r requirements.txt
 
-run:
-	jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser
+test:
+	python -m pytest -vv --cov=main --cov=mylib test_*.py
 
-stop:
-	@pkill -f "jupyter-notebook"
+format:	
+	black *.py 
+
+lint:
+	pylint --disable=R,C --ignore-patterns=test_.*?py *.py mylib/*.py
+
+deploy:
+	#
+
+all: install lint test format deploy
+
